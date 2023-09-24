@@ -7,8 +7,8 @@ import styles from "./ProjectDetails.module.css";
 
 
 function ProjectDetails(props) {
-    let project = props.projectData.project;
-    let technicalSkillSet = props.projectData.technicalSkillSet;
+    let project = props.projectData.Project;
+    let technicalSkillSet = props.projectData.Technical_Skillset;
 
     const projectDataCtx = useContext(ProjectDataContext);
 

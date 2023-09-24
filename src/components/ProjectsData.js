@@ -9,31 +9,46 @@ import Header from './Header';
 
 function ProjectsData(props) {
   const projectDataCtx = useContext(ProjectDataContext);
-  const projectsData = props.projectsData;
+  const [projectsData, setProjectsData] = useState(props.projectsData);
   const query = projectDataCtx.query;
 
-  // const filterData = projectsData.filter((projectData) => {
-  //   // const keywords = query?.toLowerCase()?.split(' ');
-  //   // return keywords.every((keyword) => {
-  //   //   const { Title, Technologies } = projectData.project;
-  //   //   return (
-  //   //     Title.toLowerCase().includes(keyword) ||
-  //   //     Technologies.toLowerCase().includes(keyword)
-  //   //   );
-  //   // });
-  // })
+  useEffect(() => {
+
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify(query);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("/api/filterOutData", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          // console.log('result:: ', result);
+          setProjectsData(JSON.parse(result));
+        }
+        )
+        .catch(error => console.log('error', error));
+  }, [query])
+
 
   return (
     <div>
       <Header />
       {projectDataCtx.isOpen && <SideBar />}
-      <section className={style.container} style={{overflow: projectDataCtx.isOpen? 'hidden': 'scroll'}}>
+      {projectsData.length && <section className={style.container} style={{ overflow: projectDataCtx.isOpen ? 'hidden' : 'scroll' }}>
         {
           projectsData.map((projectData) =>
             <ProjectDetails key={projectData.id} projectData={projectData} />
           )
         }
-      </section>
+      </section>}
+      {!projectsData.length && <h2 className='d-flex justify-content-center align-items-center w-100 h-100'>No Data</h2>}
     </div>
   )
 }

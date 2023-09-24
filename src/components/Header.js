@@ -1,5 +1,5 @@
 import React from 'react'
-import {useState, useContext} from 'react'
+import { useState, useContext } from 'react'
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -25,7 +25,7 @@ function Header() {
                         className="me-2 cursor-text"
                         aria-label="Search"
                         value={queryState}
-                        onChange = {handleInputChange}
+                        onChange={handleInputChange}
                     />
                     <Button variant="outline-success" onClick={searchQueryHandler}>Search</Button>
                 </Form>

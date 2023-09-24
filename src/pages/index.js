@@ -44,8 +44,8 @@ export async function getServerSideProps(context) {
     props: {
       projectsData: projectsData.map((projectData) => {
         return ({
-          project: projectData.Project,
-          technicalSkillSet: projectData.Technical_Skillset,
+          Project: projectData.Project,
+          Technical_Skillset: projectData.Technical_Skillset,
           id: projectData._id.toString(),
         })
       }),
