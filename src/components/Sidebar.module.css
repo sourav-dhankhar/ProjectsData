@@ -1,0 +1,29 @@
+.sidebar {
+  height: 100%;
+  width: 40%;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background-color: #f1f1f1;
+  overflow-x: hidden;
+  transition: all 2s;
+  padding: 20px;
+  opacity: 0;
+  box-shadow: -5px 0px 16px 0px rgba(0,0,0,0.5);
+  -webkit-box-shadow: -5px 0px 16px 0px rgba(0,0,0,0.5);
+  -moz-box-shadow: -5px 0px 16px 0px rgba(0,0,0,0.5);
+}
+.sidebar-lower {
+  z-index: 1;
+  position: absolute;
+  height: calc(100vh - 54px);
+  width: 100%;
+  background-color: rgba(241, 241, 241, 0.5);
+}
+
+.title {
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid rgba(133, 134, 135, 0.75);;
+}

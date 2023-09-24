@@ -1,0 +1,9 @@
+.container {
+    padding: 10px 0 10px 0;
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    grid-gap: 10px;
+    justify-items: center;
+    height: calc(100vh - 54px);
+    overflow-y: scroll;
+}
