@@ -34,20 +34,20 @@ export default async function filterOutData(req, res) {
           '$or': [
             {
               'Project.Technologies':
-                { $regex: keywords.join("|") }
+                { $regex: keywords.join("|"), $options:"i" }
             },
             {
               'Technical_Skillset.Frontend':
-                { $regex: keywords.join("|") }
+                { $regex: keywords.join("|"), $options:"i" }
             }, {
               'Technical_Skillset.Backend':
-                { $regex: keywords.join("|") }
+                { $regex: keywords.join("|"), $options:"i" }
             }, {
               'Technical_Skillset.Infrastructure':
-                { $regex: keywords.join("|") }
+                { $regex: keywords.join("|"), $options:"i" }
             }, {
               'Technical_Skillset.Databases':
-                { $regex: keywords.join("|") }
+                { $regex: keywords.join("|"), $options:"i" }
             },
           ]
         }
