@@ -1,26 +1,41 @@
 import ProjectDataContext from "./project-data-context";
-import {useReducer} from 'react';
+import { useReducer } from "react";
 
 const defaultProjectData = {
-    isOpen: false,
+    sidebarStatus: {},
     query: '',
-    projectData: {}
+    projectData: {},
+    loadingState: false
 }
 
 const projectDataReducer = (state, action) => {
     if (action.type == 'SHOW') {
         return {
-            isOpen: true,
-            projectData: action.payload
+            sidebarStatus: action.payload.side,
+            projectData: action.payload.projectData,
+            query: state.query,
+            loadingState: state.loadingState
         }
     } else if (action.type == 'HIDE') {
         return {
-            isOpen: false,
-            projectData: {}
+            sidebarStatus: action.payload.side,
+            projectData: {},
+            query: state.query,
+            loadingState: state.loadingState
         }
     } else if (action.type == 'SEARCH-QUERY') {
         return {
-            query: action.payload
+            sidebarStatus: state.sidebarStatus,
+            projectData: state.projectData,
+            query: action.payload.queryState,
+            loadingState: action.payload.queryState
+        }
+    } else if (action.type == 'LOADING-STATE') {
+        return {
+            sidebarStatus: state.sidebarStatus,
+            projectData: state.projectData,
+            query: state.query,
+            loadingState: action.loadingState
         }
     } else {
         return defaultProjectData;
@@ -30,25 +45,31 @@ const projectDataReducer = (state, action) => {
 const ProjectDataProvider = (props) => {
     const [dataState, dispatchDataAction] = useReducer(projectDataReducer, defaultProjectData);
 
-    const showDataHandler = (projectData) => {
-        dispatchDataAction({ type: 'SHOW', payload: projectData });
+    const showDataHandler = (showData) => {
+        dispatchDataAction({ type: 'SHOW', payload: { side: showData.side, projectData: showData.projectData } });
     }
 
-    const hideDataHandler = () => {
-        dispatchDataAction({ type: 'HIDE' });
+    const hideDataHandler = (hideData) => {
+        dispatchDataAction({ type: 'HIDE', payload: { side: hideData.side, projectData: hideData.projectData } });
+    }
+
+    const toggleLoadingState = (loadingState) => {
+        dispatchDataAction({ type: 'LOADING-STATE', payload: { loadingState: loadingState } });
     }
 
     const handleSearchQuery = (query) => {
-        dispatchDataAction({ type: 'SEARCH-QUERY', payload: query });
+        dispatchDataAction({ type: 'SEARCH-QUERY', payload: { queryState: query.queryState, loadingState: query.loadingState } });
     }
 
     const ProjectDataContexts = {
-        isOpen: dataState.isOpen,
+        sidebarStatus: dataState.sidebarStatus,
         projectData: dataState.projectData,
         query: dataState.query,
+        loadingState: dataState.loadingState,
         show: showDataHandler,
         hide: hideDataHandler,
-        searchQuery: handleSearchQuery
+        searchQuery: handleSearchQuery,
+        toggleLoadingState: toggleLoadingState
     }
 
     return <ProjectDataContext.Provider value={ProjectDataContexts}>

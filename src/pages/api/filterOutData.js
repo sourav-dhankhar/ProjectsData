@@ -54,24 +54,7 @@ export default async function filterOutData(req, res) {
       },
     ];
 
-    // Dynamically add stages for each keyword in the query
-    // keywords.forEach((keyword) => {
-    //   const stage = {
-    //     $match: {
-    //       'Project.Technical_Skillset.Frontend': { $regex: keyword },
-    //       'Project.Technical_Skillset.Backend': { $regex: keyword },
-    //       'Project.Technical_Skillset.Databases': { $regex: keyword },
-    //       'Project.Technical_Skillset.Infrastructure': { $regex: keyword },
-    //     },
-    //   };
-    //   pipelineStages.push(stage);
-    // });
-
-    // console.log('pipeline Stage:: ', JSON.stringify(pipelineStages));
-
     const dataOfProjects = await projectsDataCollection.aggregate(pipelineStages).toArray();
-
-    
 
     const projectsData = dataOfProjects.map((projectData) => {
       return ({

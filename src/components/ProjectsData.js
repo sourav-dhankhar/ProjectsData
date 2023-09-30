@@ -1,5 +1,8 @@
 import React from 'react'
 import ProjectDetails from './ProjectDetails'
+import CircularProgress from '@mui/material/CircularProgress';
+import Overlay from './Overlay';
+import Typography from '@mui/material/Typography';
 import style from './ProjectsData.module.css';
 
 import ProjectDataContext from '@/store/project-data-context';
@@ -10,45 +13,54 @@ import Header from './Header';
 function ProjectsData(props) {
   const projectDataCtx = useContext(ProjectDataContext);
   const [projectsData, setProjectsData] = useState(props.projectsData);
+  const loadingState = projectDataCtx.loadingState;
   const query = projectDataCtx.query;
+  const projectsDataLength = projectsData.length ? true : false;
 
   useEffect(() => {
+    if (loadingState == false) {
+      projectDataCtx.toggleLoadingState(true);
+    }
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+    var raw = JSON.stringify(query);
 
-      var raw = JSON.stringify(query);
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
 
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
-
-      fetch("/api/filterOutData", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-          // console.log('result:: ', result);
-          setProjectsData(JSON.parse(result));
-        }
-        )
-        .catch(error => console.log('error', error));
+    fetch("/api/filterOutData", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        // console.log('result:: ', result);
+        setProjectsData(JSON.parse(result));
+        projectDataCtx.toggleLoadingState(false);
+      }
+      )
+      .catch(error => {
+        console.log('error', error);
+        projectDataCtx.toggleLoadingState(false);
+      });
   }, [query])
 
 
   return (
-    <div>
+    <div style={{ height: '100vh' }}>
       <Header />
-      {projectDataCtx.isOpen && <SideBar />}
-      {projectsData.length && <section className={style.container} style={{ overflow: projectDataCtx.isOpen ? 'hidden' : 'scroll' }}>
+      {projectDataCtx.projectData != {} && <SideBar />}
+      {loadingState && <Overlay><CircularProgress /></Overlay>}
+      {(projectsDataLength && !loadingState) && <section className={style.container}>
         {
           projectsData.map((projectData) =>
             <ProjectDetails key={projectData.id} projectData={projectData} />
           )
         }
       </section>}
-      {!projectsData.length && <h2 className='d-flex justify-content-center align-items-center w-100 h-100'>No Data</h2>}
+      {!projectsDataLength && <Overlay><Typography variant='h5'>No Data Found</Typography></Overlay>}
     </div>
   )
 }

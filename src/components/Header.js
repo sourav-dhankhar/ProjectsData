@@ -1,36 +1,40 @@
-import React from 'react'
 import { useState, useContext } from 'react'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Navbar from 'react-bootstrap/Navbar';
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
 import ProjectDataContext from '@/store/project-data-context';
 
-function Header() {
+function Header(props) {
     const [queryState, setQueryState] = useState('');
     const projectDataCtx = useContext(ProjectDataContext);
+    const loadingState = projectDataCtx.loadingState;
     const handleInputChange = (event) => {
         setQueryState(event.target.value);
     }
     function searchQueryHandler() {
-        projectDataCtx.searchQuery(queryState);
+        projectDataCtx.searchQuery({queryState: queryState, loadingState: true});
     }
     return (
-        <Navbar expand="lg" className="bg-body-tertiary">
-            <Container fluid className='justify-content-center'>
-                <Form className="d-flex w-50">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        className="me-2 cursor-text"
-                        aria-label="Search"
-                        value={queryState}
-                        onChange={handleInputChange}
-                    />
-                    <Button variant="outline-success" onClick={searchQueryHandler}>Search</Button>
-                </Form>
-            </Container>
-        </Navbar>
+        <Paper
+            component="form"
+            sx={{ p: '2px 4px', margin: "10px auto", display: 'flex', alignItems: 'center', width: '50%' , position: 'relative'}} onSubmit={e => { e.preventDefault(); searchQueryHandler()}}
+        >
+            <InputBase
+                sx={{ ml: 1, flex: 1, cursor: "text" }}
+                placeholder="Search project through Technologies/TechnicalSets"
+                inputProps={{ 'aria-label': 'Search project through Technologies/TechnicalSets' }}
+                value={queryState}
+                onChange={handleInputChange}
+            />
+            {!loadingState && <IconButton type="button" sx={{ p: '10px' }}  aria-label="search" onClick={searchQueryHandler}>
+                <SearchIcon />
+            </IconButton>}
+            {loadingState && <IconButton type="button" sx={{ p: '10px' }} disabled aria-label="search" onClick={searchQueryHandler}>
+                <SearchIcon />
+            </IconButton>}
+            
+        </Paper>
     )
 }
 

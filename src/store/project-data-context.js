@@ -1,11 +1,14 @@
 import React from "react";
 
 const ProjectDataContext = React.createContext({
-    isOpen: false,
+    sidebarStatus: {},
     projectData: {},
     query: '',
+    loadingState: false,
     show: (item) => {},
-    hide: () => {}
+    hide: (item) => {},
+    searchQuery: (item) => {},
+    toggleLoadingState: (item) => {}
 })
 
 export default ProjectDataContext;

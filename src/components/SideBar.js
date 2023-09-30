@@ -1,49 +1,117 @@
 import React from 'react'
-import style from './Sidebar.module.css'
+import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import FolderIcon from '@mui/icons-material/Folder';
+import Divider from '@mui/material/Divider';
+import { Typography } from '@mui/material';
 import ProjectDataContext from '@/store/project-data-context';
 import { useContext } from 'react';
-import { XCircleIcon } from '@heroicons/react/24/outline';
 
 function SideBar() {
     const projectDataCtx = useContext(ProjectDataContext);
     const closeSidebarHandler = () => {
-        projectDataCtx.hide();
+        projectDataCtx.hide({ side: { 'right': false }, projectData: {} });
     }
+    const openSidebarHandler = () => {
+
+    }
+    const sidebarStatus = projectDataCtx.sidebarStatus;
+
+    const list = (anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 }}
+            role="presentation"
+            onClick={closeSidebarHandler}
+            onKeyDown={closeSidebarHandler}
+        >
+            <Typography sx={{ m: 2 }} variant="h6" component="div">
+                {projectDataCtx.projectData?.Project?.Title}
+            </Typography>
+            <Divider color="#848484" variant="middle" />
+            <List dense={false}>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Title</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Project?.Title}</Typography>}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Project.Technologies</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Project?.Technologies}</Typography>}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Technical_Skillset.Frontend</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Technical_Skillset?.Frontend}</Typography>}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Technical_Skillset.Backend</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Technical_Skillset?.Backend}</Typography>}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Technical_Skillset.Databases</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Technical_Skillset?.Databases ? projectDataCtx.projectData.Technical_Skillset?.Databases : '-'}</Typography>}
+                    />
+                </ListItem>
+                <ListItem>
+                    <ListItemIcon>
+                        <FolderIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        disableTypography
+                        primary={<Typography variant="caption">Technical_Skillset.Infrastructure</Typography>}
+                        secondary={<Typography variant="h6" sx={{ fontSize: 'small' }}>{projectDataCtx.projectData?.Technical_Skillset?.Infrastructure ? projectDataCtx.projectData.Technical_Skillset?.Infrastructure : '-'}</Typography>}
+                    />
+                </ListItem>
+            </List>
+        </Box>
+    );
+
     return (
         <React.Fragment>
-            <div className={style['sidebar-lower']}></div>
-            <div className={style.sidebar} style={{ opacity: projectDataCtx.isOpen ? '1' : '0', transition: 'all 2s' }}>
-                <span>
-                    <XCircleIcon style={{ height: '35px', position: 'absolute', right: '10px', 'top': '10px', cursor: 'pointer' }} onClick={closeSidebarHandler} />
-                </span>
-                <div>
-                    <h4 className={style.title}>{projectDataCtx.projectData.Project.Title}</h4>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Title</h6>
-                        <p>{projectDataCtx.projectData.Project.Title}</p>
-                    </div>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Project.Technologies</h6>
-                        <p>{projectDataCtx.projectData.Project.Technologies}</p>
-                    </div>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Technical_Skillset.Frontend</h6>
-                        <p>{projectDataCtx.projectData.Technical_Skillset.Frontend}</p>
-                    </div>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Technical_Skillset.Backend</h6>
-                        <p>{projectDataCtx.projectData.Technical_Skillset.Backend}</p>
-                    </div>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Technical_Skillset.Databases</h6>
-                        <p>{projectDataCtx.projectData.Technical_Skillset?.Databases ? projectDataCtx.projectData.Technical_Skillset?.Databases : '-'}</p>
-                    </div>
-                    <div className='mb-4'>
-                        <h6 className='mb-2'>Technical_Skillset.Infrastructure</h6>
-                        <p>{projectDataCtx.projectData.Technical_Skillset?.Infrastructure ? projectDataCtx.projectData.Technical_Skillset?.Infrastructure : '-'}</p>
-                    </div>
-                </div>
-            </div>
+            {['left', 'right', 'top', 'bottom'].map((anchor) => (
+
+                sidebarStatus != {} && sidebarStatus[anchor] != undefined && <SwipeableDrawer
+                    anchor={anchor}
+                    open={sidebarStatus[anchor]}
+                    onClose={closeSidebarHandler}
+                    onOpen={openSidebarHandler}
+                >
+                    {list(anchor)}
+                </SwipeableDrawer>
+
+            ))}
+
         </React.Fragment>
     )
 }
